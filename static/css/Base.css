@@ -159,7 +159,7 @@ main h2{
 .main-container {
     background-color: var(--card-bg);
     border-radius: 15px;
-    padding: 2rem;
+    padding: 1.5rem;
     min-height: 400px;
     border: 1px solid var(--border-color);
     box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);

@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang = "en">
+<head>
+    <meta charset = "UTF8">
+    <meta name = "viewport" content = "width=device">
+    <link rel = "stylesheet" href = "../static/css/Base.css">
+    <link rel = "stylesheet" href = "../static/css/NewQuestion.css">
+
+    <title>Main Page</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <!-- Хедер -->
+    <header>
+        <a href = ""><img src="../static/img/logo.png" class = "logo"></a>
+
+        <div class="search-container">
+            <input type = "text" class = "searchbar" placeholder="Search" id = "searchbar">
+            
+            <a href="/ask" class = "ask-button">ASK!</a>
+        </div>
+
+        <div class = "profile-wrapper">
+            <div class = "profile-text">
+                <div>
+                    <a href = "/settings">Login</a>
+                    <a href = "/register">Register</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <!-- Левая колонка, в которой основная информация текущей страницы -->
+        <div class = "main-container">
+            <div class = "h2-container">
+                <h2>How to build a moon park?</h2>
+            </div>
+            <div class="input-question">
+                <div data-label="Title">
+                    <input type="text" class="answer-field title-field" placeholder="Enter your question title" id="title-field">
+                </div>
+                <div data-label="Text">
+                    <textarea class="answer-field text-field" placeholder="Give a bit more info about your question" id="ans-field" rows="5"></textarea>
+                </div>
+                    <div data-label="Tags">
+                    <textarea class="answer-field tags-field" placeholder="Add tags to other people can find your question" id="ans-field" rows="5"></textarea>
+                </div>
+                <div class="btn-wrapper">
+                    <a href = "" class = "ans-btn">ASK!</a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Правая колонка на странице с тегами и списком пользователей -->
+        <div class = "side-info">
+            <div class = "popular-tags">
+                <h2>Popular Tags</h2>
+                <div class="tags-wrapper">
+                    <a href = "#">Python</a>
+                    <a href = "#">Java</a>
+                    <a href = "#">Go</a>
+                    <a href = "#">Asembly</a>
+                    <a href = "#">C++</a>
+                    <a href = "#">JavaScript</a>
+                    <a href = "#">VK Education</a>
+                </div>
+            </div>
+            <div class = "best-members">
+                <h2>Best Members</h2>
+                <ul class = "best-members-links">
+                    <li> 
+                        <a href = "#">Mr. Freeman</a>
+                    </li>
+
+                    <li> 
+                        <a href = "#">Dr. House</a>
+                    </li>
+
+                    <li> 
+                        <a href = "#">Bender</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </main>
+
+
+    <!-- Футер -->
+    <footer>
+        <div class="logo-container">
+            <a href = "/"><img src="../static/img/logo.png" class ="logo"></a>
+            <p>Best of the best forum!</p>
+        </div>
+
+        <div class = "main_info">
+            <h4>Information</h4>
+            <ul class = "links-list">
+                <li> 
+                    <a href = "#">About us</a>
+                </li>
+
+                <li> 
+                    <a href = "#">FAQ</a>
+                </li>
+
+                <li> 
+                    <a href = "#">Tips and Guides</a>
+                </li>
+            </ul>
+        </div>
+
+        <div class = "social">
+            <h4>Community</h4>
+            <ul class = "links-list">
+                    <li> 
+                        <a href = "http://web.telegram.org">Telegram</a>
+                    </li>
+
+                    <li> 
+                        <a href = "http://vk.com">VK</a>
+                    </li>
+
+                    <li> 
+                        <a href = "http://rutube.ru">RuTube</a>
+                    </li>
+            </ul>
+        </div>
+
+        <div class = "support-info">
+            <p>If you break with some issues - write us, we'll fix it!</p>
+            <a href = "/support" class = "support-button">Write support</a>
+        </div>
+
+    </footer>
+</body>
+
+

@@ -1,0 +1,120 @@
+/* вопрос */
+main .question-wrapper {
+    display: flex;
+    gap: 1.5rem;
+
+    padding: 0.5rem 1rem;
+    margin-bottom: 1rem;
+    transition: all 0.3s ease;
+    border-bottom: 2px solid var(--hover-color);
+}
+
+main h2{
+    color: var(--text-mint);
+    padding-bottom: 0.5rem;
+}
+
+/* ответ */
+main .answer-wrapper {
+    display: flex;
+    gap: 1.5rem;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border: 2px solid var(--border-color);
+    border-radius:25px ;
+    transition: all 0.3s ease;
+}
+
+.answer-wrapper img {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+}
+
+.answer-lowbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 0.5rem;
+}
+
+.like-btn, .correct-btn{
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--text-mint);
+    font-size: 0.9rem;
+    font-weight: 600;
+    background-color: rgba(168, 218, 220, 0.1);
+    padding: 0.4rem 0.8rem;
+    border-radius: 20px;
+    margin-right: 10px;
+}
+
+.like-btn input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    accent-color: var(--hover-color);
+}
+
+.correct-btn input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    accent-color: var(--hover-color);
+}
+
+.input-answer{
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    padding: 0.5rem 0;
+    border-top: 2px solid var(--hover-color);
+    gap: 0.5rem;
+}
+
+
+.answer-field{
+    width: 100%;
+
+    padding: 1rem 1.5rem;
+
+    border: 1px solid var(--border-color);
+    border-radius: 25px;
+    
+    background-color: var(--secondary-bg);
+    color: var(--text-mint);
+    resize: vertical;
+    min-height: 120px;
+    transition: all 0.3s ease;
+    scrollbar-color: var(--secondary-bg);
+}
+
+.answer-field:focus {
+    outline: none;
+    border-color: var(--hover-color);
+    box-shadow: 0 0 10px rgba(168, 218, 220, 0.3);
+}
+
+.answer-field:placeholder {
+    color: #8fafaf;
+}
+
+.btn-wrapper{
+    padding: 1rem 0;
+}
+
+.ans-btn {
+    padding: 0.7rem 1.5rem;
+    background: linear-gradient(135deg, #2a8c8c, #1e6b6b);
+    color: var(--text-mint);
+    text-decoration: none;
+    border-radius: 25px;
+    font-weight: 500;
+    transition: all 0.4s ease;
+    width: fit-content;
+}
+
+.ans-btn:hover {
+    background: linear-gradient(135deg, #3ba3a3, #2a8c8c);
+    transform: translateY(-2px);
+}

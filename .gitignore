@@ -1,3 +1,4 @@
 .code
 .idea
-.README.md
+.venv
+*.sqlite3

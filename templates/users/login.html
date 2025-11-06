@@ -1,0 +1,33 @@
+{% extends 'base.html'%}
+
+{%block title%}Log In{%endblock%}
+
+{%block content%}
+    <!-- Левая колонка, в которой основная информация текущей страницы -->
+    <div class = "main-container">
+        <div class = "h2-container">
+            <h2>Log in</h2>
+        </div>
+        <div class="login-form">
+
+            <div class="form-row">
+                <div class="form-label">Login</div>
+                <input type="text" class="input-field" placeholder="saucesamba" id="login-field">
+            </div>
+
+            <div class="form-row">
+                <div class="form-label">Email</div>
+                <input type="text" class="input-field" placeholder="saucesamba@vk.com" id="email-field">
+            </div>
+
+            <div class="btn-container">
+                <div>
+                    <a href = "" class = "login-btn">Log in</a>
+                </div>
+                <div>
+                    <a href = "" class = "account-link">Create new account</a>
+                </div>
+            </div>
+        </div>
+    </div>
+{%endblock%}

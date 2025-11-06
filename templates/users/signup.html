@@ -1,0 +1,51 @@
+{% extends 'base.html'%}
+
+{%block title%}Sign UP{%endblock%}
+
+{%block content%}
+    <!-- Левая колонка, в которой основная информация текущей страницы -->
+    <div class = "main-container">
+        <div class = "h2-container">
+            <h2>Registration</h2>
+        </div>
+        <div class="login-form">
+
+            <div class="form-row">
+                <div class="form-label">Login</div>
+                <input type="text" class="input-field" placeholder="saucesamba" id="login-field">
+            </div>
+
+            <div class="form-row">
+                <div class="form-label">Email</div>
+                <input type="text" class="input-field" placeholder="saucesamba@vk.com" id="email-field">
+            </div>
+
+            <div class="form-row">
+                <div class="form-label">Nickname</div>
+                <input type="text" class="input-field" placeholder="Mr.Sauce" id="nickname-field">
+            </div>
+
+            <div class="form-row">
+                <div class="form-label">Password</div>
+                <input type="text" class="input-field" placeholder="Your secret password" id="password-first-field">
+            </div>
+
+            <div class="form-row">
+                <div class="form-label">Repeat password</div>
+                <input type="text" class="input-field" placeholder="Input your password again" id="password-second-field">
+            </div>
+
+            <div class="form-row">
+                <div class="form-label">Upload Avatar</div>
+                <input type="file" class="input-field" id="file-field">
+            </div>
+
+
+            <div class="btn-container">
+                <div>
+                    <a href = "" class = "login-btn">Register</a>
+                </div>
+            </div>
+        </div>
+    </div>
+{%endblock%}

@@ -1,17 +1,21 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang = "en">
 <head>
     <meta charset = "UTF8">
     <meta name = "viewport" content = "width=device">
     <link rel = "stylesheet" href = "../static/css/Base.css">
-    <title>Main Page</title>
+    <link rel = "stylesheet" href = "../static/css/Question.css">
+    <link rel = "stylesheet" href = "../static/css/Login.css">
+    {%block title%}ASKme{%endblock%}
     <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 </head>
 
 <body>
     <!-- Хедер -->
     <header>
-        <a href = ""><img src="../static/img/logo.png" class = "logo"></a>
+        <a href = ""><img src="{% static "img/logo.png" %}" class = "logo"></a>
 
         <div class="search-container">
             <input type = "text" class = "searchbar" placeholder="Search" id = "searchbar">
@@ -20,7 +24,7 @@
         </div>
 
         <div class = "profile-wrapper">
-            <div class = "photo"><img src="../static/img/profilepic.png"></div>
+            <div class = "photo"><img src="{% static "img/profilepic.png" %}"></div>
 
             <div class = "profile-text">
                 <div class = "profile-name">Sad Frog</div>
@@ -35,9 +39,8 @@
 
     <main>
         <!-- Левая колонка, в которой основная информация текущей страницы -->
-        <div class = "main-container">
-
-        </div>
+        {%block content%}
+        {%endblock%}
 
         <!-- Правая колонка на странице с тегами и списком пользователей -->
         <div class = "side-info">

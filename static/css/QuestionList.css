@@ -1,0 +1,51 @@
+.pagination{
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    font-weight: 400;
+}
+
+.pagination button{
+    width: 30px;
+    height: 30px;
+    border-radius: 20%;
+    border: 2px solid var(--border-color);
+    background-color: var(--hover-color);
+    color:var(--secondary-bg);
+    font-weight: 400;
+    transition: all 0.2s ease;
+}
+
+.pagination button:hover{
+    transform: translateY(-3px);
+    border-color: var(--hover-color);
+}
+
+
+main h2{
+    color: var(--text-mint);
+    padding-bottom: 1rem;
+}
+
+/* вопрос */
+main .question-wrapper {
+    display: flex;
+    gap: 1.5rem;
+    border: 2px solid var(--border-color);
+    border-radius: 12px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    transition: all 0.3s ease;
+}
+
+.question-wrapper:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+    border-color: var(--hover-color);
+}
+
+.question-lowbar {
+    border-top: 1px solid var(--border-color);
+}

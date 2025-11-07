@@ -1,5 +1,7 @@
 {% extends 'base.html'%}
 
+{%load static%}
+
 {%block title%}Profile{%endblock%}
 
 {%block content%}
@@ -7,10 +9,10 @@
     <div class = "main-container">
         <div class="profile-header">
             <div class = "photo">
-                <img src="../static/img/profilepic.png">
+                <img src="{% static 'img/profilepic.png' %}">
             </div>
             <div class = "h2-container">
-                <h2>Profile: Mr. Sauce</h2>
+                <h2>Profile: {{user.nickname}}</h2>
             </div>
         </div>
 
@@ -18,17 +20,17 @@
 
             <div class="form-row">
                 <div class="form-label">Login</div>
-                <input type="text" class="input-field" placeholder="saucesamba" id="login-field">
+                <input type="text" class="input-field" placeholder="{{user.login}}" id="login-field">
             </div>
 
             <div class="form-row">
                 <div class="form-label">Email</div>
-                <input type="text" class="input-field" placeholder="saucesamba@vk.com" id="email-field">
+                <input type="text" class="input-field" placeholder="{{user.email}}" id="email-field">
             </div>
 
             <div class="form-row">
                 <div class="form-label">Nickname</div>
-                <input type="text" class="input-field" placeholder="Mr.Sauce" id="nickname-field">
+                <input type="text" class="input-field" placeholder="{{user.nickname}}" id="nickname-field">
             </div>
 
             <div class="form-row">
@@ -39,7 +41,7 @@
 
             <div class="btn-container">
                 <div>
-                    <a href = "" class = "login-btn">Save</a>
+                    <a href = "{%url 'index'%}" class = "login-btn">Save</a>
                 </div>
             </div>
         </div>

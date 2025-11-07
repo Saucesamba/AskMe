@@ -5,33 +5,32 @@
 <head>
     <meta charset = "UTF8">
     <meta name = "viewport" content = "width=device">
-    <link rel = "stylesheet" href = "../static/css/Base.css">
-    <link rel = "stylesheet" href = "../static/css/Question.css">
-    <link rel = "stylesheet" href = "../static/css/Login.css">
-    {%block title%}ASKme{%endblock%}
+    <link rel = "stylesheet" href = "{% static "css/Base.css"%}">
+    <link rel = "stylesheet" href = "{% static "css/Login.css"%}">
+    <link rel = "stylesheet" href = "{% static "css/Question.css"%}">
+
+    <title>{%block title%}ASKme{%endblock%}</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 </head>
 
 <body>
     <!-- Хедер -->
     <header>
-        <a href = ""><img src="{% static "img/logo.png" %}" class = "logo"></a>
+        <a href = "{%url 'index'%}"><img src="{% static "img/logo.png" %}" class = "logo"></a>
 
         <div class="search-container">
             <input type = "text" class = "searchbar" placeholder="Search" id = "searchbar">
             
-            <a href="/ask" class = "ask-button">ASK!</a>
+            <a href="{%url 'ask'%}" class = "ask-button">ASK!</a>
         </div>
 
         <div class = "profile-wrapper">
             <div class = "photo"><img src="{% static "img/profilepic.png" %}"></div>
-
             <div class = "profile-text">
                 <div class = "profile-name">Sad Frog</div>
-
                 <div>
-                    <a href = "/settings">Settings</a>
-                    <a href = "/register">Register</a>
+                    <a href = "{%url 'profile' %}">Settings</a>
+                    <a href = "{%url 'logout' %}" >Log out</a>
                 </div>
             </div>
         </div>
@@ -79,7 +78,7 @@
     <!-- Футер -->
     <footer>
         <div class="logo-container">
-            <a href = "/"><img src="../static/img/logo.png" class ="logo"></a>
+            <a href = "{%url 'index' %}"><img src="{%static "img/logo.png"%}" class ="logo"></a>
             <p>Best of the best forum!</p>
         </div>
 
@@ -119,7 +118,7 @@
 
         <div class = "support-info">
             <p>If you break with some issues - write us, we'll fix it!</p>
-            <a href = "/support" class = "support-button">Write support</a>
+            <a href = "/" class = "support-button">Write support</a>
         </div>
 
     </footer>

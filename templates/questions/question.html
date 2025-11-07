@@ -1,30 +1,33 @@
 {%extends 'base.html'%}
 
+{%load static%}
+
 {%block title%}Question{%endblock%}
 
 {%block content%}        
     <div class = "main-container">
         <section id = "start-question">
             <div class="question-wrapper">
-                <div class = "photo"><img src="../static/img/profilepic.png"></div>
+                <div class = "photo"><img src="{%static 'img/profilepic.png'%}"></div>
                 <div>
                     <div class="text-wrapper">
                         <div class = "h2-container">
-                            <h2>How to build a moon park?</h2>
+                            <h2>{{question.title}}</h2>
                         </div>
                         <div>
-                            <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Beatae maxime esse natus, laboriosam atque minus cum sapiente perspiciatis. Quo, et! Id ducimus vel aliquam reiciendis ullam fugiat sapiente optio quibusdam.</p>
+                            <p>{{question.question_text}}</p>
                         </div>
                     </div>
 
                     <div class="question-lowbar">
                         <div class = "question-tags">
                             tags:
-                            <a href="">black-jack</a>
-                            <a href="">bender</a>
+                            {% for tag in question.tags %}
+                                <a href="{% url 'tag' tag %}">{{ tag }}</a>
+                            {% endfor %}
                         </div>
                         <div class = "like-btn">
-                            3
+                            {{question.like_count}}
                             <input type ="checkbox" id = "like-btn">
                         </div>
                     </div>
@@ -32,13 +35,13 @@
             </div>
         </section>
         <section class = "answers">
+            {%for answer in question.answers%}
             <div class="answer-wrapper">
-                <div class = "photo"><img src="../static/img/profilepic.png"></div>
+                <div class = "photo"><img src="{%static 'img/profilepic.png'%}"></div>
                 <div>
-
                     <div class="text-wrapper">
                         <div>
-                            <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Beatae maxime esse natus, laboriosam atque minus cum sapiente perspiciatis. Quo, et! Id ducimus vel aliquam reiciendis ullam fugiat sapiente optio quibusdam.</p>
+                            <p>{{answer.text}}</p>
                         </div>
                     </div>
 
@@ -48,36 +51,15 @@
                             Correct!
                         </div>
                         <div class = "like-btn">
-                            4
+                            {{answer.like_count}}
                             <input type ="checkbox" id = "like-btn">
                         </div>                            
                     </div>
 
                 </div>
             </div>
-            <div class="answer-wrapper">
-                <div class = "photo"><img src="../static/img/profilepic.png"></div>
-                <div>
+            {%endfor%}
 
-                    <div class="text-wrapper">
-                        <div>
-                            <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Beatae maxime esse natus, laboriosam atque minus cum sapiente perspiciatis. Quo, et! Id ducimus vel aliquam reiciendis ullam fugiat sapiente optio quibusdam.</p>
-                        </div>
-                    </div>
-
-                    <div class="answer-lowbar">
-                        <div class = "correct-btn">
-                            <input type ="checkbox" id = "correct-btn">
-                            Correct!
-                        </div>
-                        <div class = "like-btn">
-                            4
-                            <input type ="checkbox" id = "like-btn">
-                        </div>                            
-                    </div>
-
-                </div>
-            </div>
         </section>
         <section class = "new-answer">
             <div class="input-answer">
@@ -85,7 +67,7 @@
                     <textarea class="answer-field" placeholder="Input your answer here" id="ans-field" rows="5"></textarea>
                 </div>
                 <div class="btn-wrapper">
-                    <a href = "" class = "ans-btn">Answer</a>
+                    <button type = "submit" class = "ans-btn"> Answer</button>
                 </div>
             </div>
         </section>

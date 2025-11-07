@@ -14,9 +14,15 @@ class ProfileView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(ProfileView,self).get_context_data(**kwargs)
-        context[""] = []
+        context["user"] = {
+            'login':'saucesamba',
+            'email':'saucesamba@vk.com',
+            'nickname':'MR. Sauce',
+        }
         return context
     
     def dispatch(self, request, *args, **kwargs):
         return super(ProfileView,self).dispatch(request, *args, **kwargs)
     
+class LogOutView(TemplateView):
+    pass

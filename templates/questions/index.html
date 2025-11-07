@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 
+{%load static%}
+
 {%block title%}Question List{%endblock%}
 
 <!-- Левая колонка, в которой основная информация текущей страницы -->
@@ -7,17 +9,18 @@
     <div class = "main-container">
         <div class = "h2-container">
             <h2>New Questions</h2>
-            <h2><a href ="#">Hot Questions</a></h2>
+            <h2><a href ="{% url 'hot' %}">Hot Questions</a></h2>
         </div>
 
         {% for q in questions %}
             <div class="question-wrapper">
-                <div class = "photo"><img src="{{ q.photo }}"></div>
+                {% comment %} <div class = "photo"><img src="{{ q.photo }}"></div> {% endcomment %}
+                <div class = "photo"><img src="{% static 'img/profilepic.png' %}"></div>
                 <div>
                     <div class="text-wrapper">
                         <div class = "h2-container">
                             <h2>
-                                <a href ="">{{ q.title }}</a> 
+                                <a href ="{% url 'question_details' q.id %}">{{ q.title }}</a> 
                             </h2>
                         </div>
                         <div>
@@ -29,11 +32,11 @@
                         <div class = "question-tags">
                             tags:
                             {% for tag in q.tags %}
-                                <a href="">{{ tag }}</a>
+                                <a href="{% url 'tag' tag %}">{{ tag }}</a>
                             {% endfor %}
                         </div>
                         <div class = "answer-btn">
-                            <a href ="">answer({{q.answer_count}})</a>
+                            <a href ="{% url 'question_details' q.id %}">answer({{q.answer_count}})</a>
                         </div>
                         <div class = "like-btn">
                             {{q.like_count}}

@@ -8,5 +8,9 @@
             <a href="{%url 'index' %}?page={{page}}" type = "button">{{page}}</a>
         {%endif%}
 
+        {%if meta.page_name == 'tags'%}
+            <a href="{%url 'tag' tag %}?page={{page}}" type = "button">{{page}}</a>
+        {%endif%}
+
     {%endfor%}
 </div>

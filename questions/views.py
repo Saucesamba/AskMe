@@ -26,7 +26,6 @@ def paginate(items, page, per_page = 10):
     end_index = page * per_page
     return items[start_index:end_index]
 
-
 class MainPageView(TemplateView):
     template_name = 'questions/index.html'
 
@@ -117,27 +116,26 @@ class OneQuestionView(TemplateView):
 class TagFilteredQuestionsView(TemplateView):
     template_name = 'questions/index.html'
 
+    COUNT_FAKE_QUESTIONS = 10
+    QUESTIONS_PER_PAGE = 3
+
     def get_context_data(self, **kwargs):
         context = super(TagFilteredQuestionsView, self).get_context_data(**kwargs)
+        page = int(self.request.GET.get('page', 1))
 
         context['meta'] = {
-            'page_name':'tag',
-            'tag':'fake tag not actual',
+            'page_name':'tags',
         }
 
-        context['questions'] = [ {
-            'id':i,
-            'title': f'Title',
-            'question_text':'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
-            'tags':{
-                'swag',
-                'first',
-                'tag',
-            },
-            'is_hot': False,
-            'answer_count':3,
-            'like_count': 52,
-            } for i in range (30)] 
+        context['page'] = page
+        context['count_questions'] = self.COUNT_FAKE_QUESTIONS
+        context['questions_per_page'] = self.QUESTIONS_PER_PAGE
+
+        questions = get_fake_questions(self.COUNT_FAKE_QUESTIONS)
+        context['questions'] = paginate(questions, page, self.QUESTIONS_PER_PAGE)
+
+        context['max_page'] = math.ceil(self.COUNT_FAKE_QUESTIONS/self.QUESTIONS_PER_PAGE)
+        context['pages'] = [ i for i in range(1, context['max_page']+1)]
         return context
     
     def dispatch(self, request, *args, **kwargs):

@@ -8,8 +8,20 @@
 {%block content %}
     <div class = "main-container">
         <div class = "h2-container">
-            <h2>New Questions</h2>
-            <h2><a href ="{% url 'hot' %}">Hot Questions</a></h2>
+            {%if meta.page_name == 'main'%}
+                <h2>New Questions</h2>
+                <h2><a href ="{% url 'hot' %}">Hot Questions</a></h2>
+            {%endif%}
+
+            {%if meta.page_name == 'hot'%}
+                <h2>Hot Questions</h2>
+                <h2><a href ="{% url 'index' %}">New Questions</a></h2>
+            {%endif%}
+
+            {%if meta.page_name == 'tag'%}
+                <h2>Tag: {{meta.tag}}</h2>
+            {%endif%}
+
         </div>
 
         {% for q in questions %}

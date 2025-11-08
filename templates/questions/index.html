@@ -58,12 +58,8 @@
                 </div>
             </div>
         {% endfor %}
-
-        <div class = "pagination">
-            <button>1</button>
-            <button>2</button>
-            <button class="fake-btn">...</button>
-            <button>52</button>
-        </div>
+        
+        {%include "questions/pagination.html"%}
+        
     </div>
 {% endblock %}

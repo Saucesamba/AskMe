@@ -1,0 +1,26 @@
+{%extends 'base.html'%}
+
+{%block title%}Create Question{%endblock%}
+
+{%block content%}
+    <div class = "main-container">
+        <div class = "h2-container">
+            <h2>New Question</h2>
+        </div>
+        <div class="input-question">
+            <div data-label="Title">
+                <input type="text" class="answer-field title-field" placeholder="Enter your question title" id="title-field">
+            </div>
+            <div data-label="Text">
+                <textarea class="answer-field text-field" placeholder="Give a bit more info about your question" id="ans-field" rows="5"></textarea>
+            </div>
+                <div data-label="Tags">
+                <textarea class="answer-field tags-field" placeholder="Add tags to other people can find your question" id="ans-field" rows="5"></textarea>
+            </div>
+            <div class="btn-wrapper">
+                <a href = "{%url 'index' %}" class = "ans-btn">ASK!</a>
+            </div>
+        </div>
+    </div>
+{%endblock%}
+        

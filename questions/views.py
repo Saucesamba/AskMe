@@ -6,6 +6,9 @@ import math
 
 from questions.pagination import paginate
 from questions.utils import QuestionManager
+from questions.models import Tag, Question
+from django.shortcuts import get_object_or_404
+
 
 
 manager = QuestionManager()
@@ -29,7 +32,7 @@ class MainPageView(TemplateView):
 
         context.update(ctx)
         context['questions'] = q
-
+        context['tags'] = Tag.objects.all()[:12]
         return context
 
     def dispatch(self, request, *args, **kwargs):
@@ -52,6 +55,7 @@ class HotQuestionsView(TemplateView):
 
         context.update(ctx)
         context['questions'] = q
+        context['tags'] = Tag.objects.all()[:12]
 
         return context
     
@@ -63,13 +67,18 @@ class OneQuestionView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(OneQuestionView, self).get_context_data(**kwargs)
-        q = manager.get_question_by_id(self.kwargs.get('pk'))
-        context["question"] = {}
+        q = get_object_or_404(Question, pk=self.kwargs.get("pk"))
+        answers = q.answers.all()
+        context["answers"] = answers[:15]
+        context["question"] = q
+        context['tags'] = Tag.objects.all()[:12]
         return context
     
     def dispatch(self, request, *args, **kwargs):
         return super(OneQuestionView, self).dispatch(request, *args, **kwargs)
     
+
+
 class TagFilteredQuestionsView(TemplateView):
     template_name = 'questions/index.html'
     QUESTIONS_PER_PAGE = 3
@@ -78,15 +87,20 @@ class TagFilteredQuestionsView(TemplateView):
         context = super(TagFilteredQuestionsView, self).get_context_data(**kwargs)
         page = int(self.request.GET.get('page', 1))
 
+
+        t = self.kwargs.get('tag')
+
+        questions = manager.get_tagged_questions(t)
+        ctx, q = paginate(questions, page, self.QUESTIONS_PER_PAGE)
+
         context['meta'] = {
             'page_name':'tags',
+            'tag': t
         }
-
-        questions = manager.get_tagged_questions(self.request.GET.get('tag'))
-        ctx, q = paginate(questions, page, self.QUESTIONS_PER_PAGE)
 
         context.update(ctx)
         context['questions'] = q
+        context['tags'] = Tag.objects.all()[:12]
 
         return context
     
@@ -97,9 +111,7 @@ class NewQuestionView(TemplateView):
     template_name = "questions/ask.html"
     def get_context_data(self, **kwargs):
         context = super(NewQuestionView,self).get_context_data(**kwargs)
-        context[""] = [
-
-        ]
+        context['tags'] = Tag.objects.all()[:12]
         return context
     
     def dispatch(self, request, *args, **kwargs):

@@ -46,13 +46,11 @@
             <div class = "popular-tags">
                 <h2>Popular Tags</h2>
                 <div class="tags-wrapper">
-                    <a href = "">Python</a>
-                    <a href = "#">Java</a>
-                    <a href = "#">Go</a>
-                    <a href = "#">Asembly</a>
-                    <a href = "#">C++</a>
-                    <a href = "#">JavaScript</a>
-                    <a href = "#">VK Education</a>
+
+                    {%for t in tags%}
+                        <a href = "{%url 'tag' t%}">{{t}}</a>
+                    {% endfor %}
+
                 </div>
             </div>
             <div class = "best-members">

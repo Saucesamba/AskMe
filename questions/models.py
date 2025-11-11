@@ -54,7 +54,7 @@ class QuestionAnswer(QuestionTimeMixin):
     author = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
     text = models.TextField(max_length=500 )
     is_correct = models.BooleanField(default=False)
-    question = models.ForeignKey(Question, on_delete=models.CASCADE)
+    question = models.ForeignKey(Question, on_delete=models.CASCADE,related_name="answers",)
     like_count = models.IntegerField()
     
     def save(self, *args, **kwargs):

@@ -21,8 +21,8 @@ class Command(BaseCommand):
         num_users = count
         num_tags = count 
         num_questions = count * 10
-        num_answers = count * 10
-        # num_marks = count * 200
+        num_answers = count * 100
+        #num_marks = count * 200
 
         users = []
         for i in range (num_users):
@@ -76,12 +76,12 @@ class Command(BaseCommand):
         answers = []
         temp_count = 0
         while temp_count < num_answers:
-            for _ in range(random.randint(3, 20)):
+            for _ in range(random.randint(1, 3)):
                 temp_count += 1
                 answer = QuestionAnswer.objects.create(
                     author=random.choice(users),
                     text=fake.text(max_nb_chars=300),
-                    question=question,
+                    question=questions[random.randint(0, len(questions))],
                     is_correct=fake.boolean(chance_of_getting_true=10),
                     like_count = 0
                 )

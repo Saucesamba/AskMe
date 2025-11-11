@@ -43,7 +43,7 @@
                     <div class="question-lowbar">
                         <div class = "question-tags">
                             tags:
-                            {% for tag in q.tags %}
+                            {% for tag in q.tags.all %}
                                 <a href="{% url 'tag' tag %}">{{ tag }}</a>
                             {% endfor %}
                         </div>

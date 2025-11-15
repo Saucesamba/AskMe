@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{%load static%}
+
+{%block title%}Question List{%endblock%}
+
+<!-- Левая колонка, в которой основная информация текущей страницы -->
+{%block content %}
+    <div class = "main-container">
+        <div class = "h2-container">
+            {%if meta.page_name == 'main'%}
+                <h2>New Questions</h2>
+                <h2><a href ="{% url 'hot' %}">Hot Questions</a></h2>
+            {%endif%}
+
+            {%if meta.page_name == 'hot'%}
+                <h2>Hot Questions</h2>
+                <h2><a href ="{% url 'index' %}">New Questions</a></h2>
+            {%endif%}
+
+            {%if meta.page_name == 'tag'%}
+                <h2>Tag: {{meta.tag}}</h2>
+            {%endif%}
+
+        </div>
+
+        {% for q in questions %}
+            <div class="question-wrapper">
+                {% comment %} <div class = "photo"><img src="{{ q.photo }}"></div> {% endcomment %}
+                <div class = "photo"><img src="{% static 'img/profilepic.png' %}"></div>
+                <div>
+                    <div class="text-wrapper">
+                        <div class = "h2-container">
+                            <h2>
+                                <a href ="{% url 'question_details' q.id %}">{{ q.title }}</a> 
+                            </h2>
+                        </div>
+                        <div>
+                            <p>{{q.question_text}}</p>
+                        </div>
+                    </div>
+
+                    <div class="question-lowbar">
+                        <div class = "question-tags">
+                            tags:
+                            {% for tag in q.tags %}
+                                <a href="{% url 'tag' tag %}">{{ tag }}</a>
+                            {% endfor %}
+                        </div>
+                        <div class = "answer-btn">
+                            <a href ="{% url 'question_details' q.id %}">answer({{q.answer_count}})</a>
+                        </div>
+                        <div class = "like-btn">
+                            {{q.like_count}}
+                            <input type ="checkbox" id = "like-btn">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+        
+        {%include "questions/pagination.html"%}
+        
+    </div>
+{% endblock %}

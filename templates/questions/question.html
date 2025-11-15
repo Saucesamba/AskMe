@@ -1,0 +1,75 @@
+{%extends 'base.html'%}
+
+{%load static%}
+
+{%block title%}Question{%endblock%}
+
+{%block content%}        
+    <div class = "main-container">
+        <section id = "start-question">
+            <div class="question-wrapper">
+                <div class = "photo"><img src="{%static 'img/profilepic.png'%}"></div>
+                <div>
+                    <div class="text-wrapper">
+                        <div class = "h2-container">
+                            <h2>{{question.title}}</h2>
+                        </div>
+                        <div>
+                            <p>{{question.question_text}}</p>
+                        </div>
+                    </div>
+
+                    <div class="question-lowbar">
+                        <div class = "question-tags">
+                            tags:
+                            {% for tag in question.tags %}
+                                <a href="{% url 'tag' tag %}">{{ tag }}</a>
+                            {% endfor %}
+                        </div>
+                        <div class = "like-btn">
+                            {{question.like_count}}
+                            <input type ="checkbox" id = "like-btn">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class = "answers">
+            {%for answer in question.answers%}
+            <div class="answer-wrapper">
+                <div class = "photo"><img src="{%static 'img/profilepic.png'%}"></div>
+                <div>
+                    <div class="text-wrapper">
+                        <div>
+                            <p>{{answer.text}}</p>
+                        </div>
+                    </div>
+
+                    <div class="answer-lowbar">
+                        <div class = "correct-btn">
+                            <input type ="checkbox" id = "correct-btn">
+                            Correct!
+                        </div>
+                        <div class = "like-btn">
+                            {{answer.like_count}}
+                            <input type ="checkbox" id = "like-btn">
+                        </div>                            
+                    </div>
+
+                </div>
+            </div>
+            {%endfor%}
+
+        </section>
+        <section class = "new-answer">
+            <div class="input-answer">
+                <div>
+                    <textarea class="answer-field" placeholder="Input your answer here" id="ans-field" rows="5"></textarea>
+                </div>
+                <div class="btn-wrapper">
+                    <a href = "{%url 'index' %}" type = "button" class = "ans-btn"> Answer</a>
+                </div>
+            </div>
+        </section>
+    </div>
+{%endblock%}

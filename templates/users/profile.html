@@ -1,0 +1,49 @@
+{% extends 'base.html'%}
+
+{%load static%}
+
+{%block title%}Profile{%endblock%}
+
+{%block content%}
+    <!-- Левая колонка, в которой основная информация текущей страницы -->
+    <div class = "main-container">
+        <div class="profile-header">
+            <div class = "photo">
+                <img src="{% static 'img/profilepic.png' %}">
+            </div>
+            <div class = "h2-container">
+                <h2>Profile: {{user.nickname}}</h2>
+            </div>
+        </div>
+
+        <div class="login-form">
+
+            <div class="form-row">
+                <div class="form-label">Login</div>
+                <input type="text" class="input-field" placeholder="{{user.login}}" id="login-field">
+            </div>
+
+            <div class="form-row">
+                <div class="form-label">Email</div>
+                <input type="text" class="input-field" placeholder="{{user.email}}" id="email-field">
+            </div>
+
+            <div class="form-row">
+                <div class="form-label">Nickname</div>
+                <input type="text" class="input-field" placeholder="{{user.nickname}}" id="nickname-field">
+            </div>
+
+            <div class="form-row">
+                <div class="form-label">Upload Avatar</div>
+                <input type="file" class="input-field" id="file-field">
+            </div>
+
+
+            <div class="btn-container">
+                <div>
+                    <a href = "{%url 'index'%}" class = "login-btn">Save</a>
+                </div>
+            </div>
+        </div>
+    </div>
+{%endblock%}

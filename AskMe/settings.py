@@ -12,16 +12,23 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 import os
 from pathlib import Path
+from configparser import ConfigParser
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+
+config = ConfigParser()
+config.read(os.path.join(BASE_DIR, 'conf', 'django.conf'))
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-i36f^=q1z5^jc^db^4d-wb-j_3i_lpv69#z1k4_py02%9kcm-8'
+SECRET_KEY = ''
+
+SECRET_KEY = config.get('project', 'SECRET_KEY', raw=True, fallback='<UNFILLED_SECRET_KEY>')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -106,6 +113,9 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# AUTH_USER_MODEL = 'users.UserProfile'
+
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
@@ -126,6 +136,9 @@ STATIC_URL = 'static/'
 STATICFILES_DIRS = [BASE_DIR/"static"]
 
 STATIC_ROOT = BASE_DIR / "staticfiles"
+
+MEDIA_URL = 'media/'
+MEDIA_ROOT = BASE_DIR / 'media'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field

@@ -22,7 +22,7 @@
                     <div class="question-lowbar">
                         <div class = "question-tags">
                             tags:
-                            {% for tag in question.tags %}
+                            {% for tag in question.tags.all %}
                                 <a href="{% url 'tag' tag %}">{{ tag }}</a>
                             {% endfor %}
                         </div>
@@ -35,7 +35,7 @@
             </div>
         </section>
         <section class = "answers">
-            {%for answer in question.answers%}
+            {%for answer in answers%}
             <div class="answer-wrapper">
                 <div class = "photo"><img src="{%static 'img/profilepic.png'%}"></div>
                 <div>

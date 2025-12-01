@@ -18,7 +18,7 @@
                 <h2><a href ="{% url 'index' %}">New Questions</a></h2>
             {%endif%}
 
-            {%if meta.page_name == 'tag'%}
+            {%if meta.page_name == 'tags'%}
                 <h2>Tag: {{meta.tag}}</h2>
             {%endif%}
 
@@ -43,7 +43,7 @@
                     <div class="question-lowbar">
                         <div class = "question-tags">
                             tags:
-                            {% for tag in q.tags %}
+                            {% for tag in q.tags.all %}
                                 <a href="{% url 'tag' tag %}">{{ tag }}</a>
                             {% endfor %}
                         </div>

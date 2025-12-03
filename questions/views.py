@@ -27,7 +27,7 @@ class MainPageView(TemplateView):
             'page_name':'main',
         }
 
-        questions = manager.get_new_questions()
+        questions = Question.objects.get_new_questions()
         ctx, q = paginate(questions, page, self.QUESTIONS_PER_PAGE)
 
         context.update(ctx)
@@ -50,7 +50,7 @@ class HotQuestionsView(TemplateView):
             'page_name':'hot',
         }
 
-        questions = manager.get_hot_questions()
+        questions = Question.objects.get_hot_questions()
         ctx, q = paginate(questions, page, self.QUESTIONS_PER_PAGE)
 
         context.update(ctx)
@@ -90,7 +90,7 @@ class TagFilteredQuestionsView(TemplateView):
 
         t = self.kwargs.get('tag')
 
-        questions = manager.get_tagged_questions(t)
+        questions = Question.objects.get_tagged_questions(t)
         ctx, q = paginate(questions, page, self.QUESTIONS_PER_PAGE)
 
         context['meta'] = {

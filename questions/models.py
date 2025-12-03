@@ -1,7 +1,7 @@
 from django.db import models
 
 from users.models import UserProfile
-
+from questions.utils import QuestionManager
 # миксин для даты создания и обновления
 class QuestionTimeMixin(models.Model):
     class Meta:
@@ -34,6 +34,8 @@ class Question(QuestionTimeMixin):
     like_count = models.IntegerField()
     answer_count = models.IntegerField()
 
+    objects = QuestionManager()
+    
     def answer(self):
         self.answer_count += 1
         self.save()

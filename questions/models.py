@@ -1,8 +1,8 @@
 from django.db import models
 
 from users.models import UserProfile
-from questions.utils import QuestionManager
 # миксин для даты создания и обновления
+
 class QuestionTimeMixin(models.Model):
     class Meta:
         abstract = True
@@ -20,6 +20,26 @@ class Tag(models.Model):
     def __str__(self):
         return self.title
 
+
+class QuestionManager(models.Manager):
+
+    def get_hot_questions(self):
+        return Question.objects.all().filter(is_hot = True)
+
+    def get_new_questions(self):
+        return Question.objects.all().order_by('-created_at')
+    
+    def get_tagged_questions(self, tag):
+        if not tag:
+            questions = Question.objects.all()
+        else:
+            questions = Question.objects.all().filter(Q(tags__title = tag))
+        
+        return questions.order_by("-created_at")
+    
+    def get_question_by_id(self, id):
+        return Question.objects.get(id = id)
+    
 
 class Question(QuestionTimeMixin):
     class Meta: 

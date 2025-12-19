@@ -5,13 +5,10 @@ from django.views.generic import TemplateView
 import math
 
 from questions.pagination import paginate
-from questions.utils import QuestionManager
 from questions.models import Tag, Question
 from django.shortcuts import get_object_or_404
 
 
-
-manager = QuestionManager()
 
 
 class MainPageView(TemplateView):

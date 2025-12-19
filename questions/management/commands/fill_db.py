@@ -81,7 +81,7 @@ class Command(BaseCommand):
                 answer = QuestionAnswer.objects.create(
                     author=random.choice(users),
                     text=fake.text(max_nb_chars=300),
-                    question=questions[random.randint(0, len(questions))],
+                    question=random.choice(questions),
                     is_correct=fake.boolean(chance_of_getting_true=10),
                     like_count = 0
                 )

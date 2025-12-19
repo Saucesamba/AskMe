@@ -7,10 +7,10 @@ import math
 from questions.pagination import paginate
 from questions.models import Tag, Question
 from django.shortcuts import get_object_or_404
+from django.utils.decorators import method_decorator
+from django.contrib.auth.decorators import login_required
 
-
-
-
+@method_decorator(login_required, name = 'dispatch')
 class MainPageView(TemplateView):
     template_name = 'questions/index.html'
     QUESTIONS_PER_PAGE = 7
@@ -35,6 +35,7 @@ class MainPageView(TemplateView):
     def dispatch(self, request, *args, **kwargs):
         return super(MainPageView, self).dispatch(request, *args, **kwargs)
 
+@method_decorator(login_required, name = 'dispatch')
 class HotQuestionsView(TemplateView):
     template_name = 'questions/index.html'
     QUESTIONS_PER_PAGE = 5
@@ -59,6 +60,7 @@ class HotQuestionsView(TemplateView):
     def dispatch(self, request, *args, **kwargs):
         return super(HotQuestionsView, self).dispatch(request, *args, **kwargs)
     
+@method_decorator(login_required, name = 'dispatch')   
 class OneQuestionView(TemplateView):
     template_name = 'questions/question.html'
 
@@ -75,7 +77,7 @@ class OneQuestionView(TemplateView):
         return super(OneQuestionView, self).dispatch(request, *args, **kwargs)
     
 
-
+@method_decorator(login_required, name = 'dispatch')
 class TagFilteredQuestionsView(TemplateView):
     template_name = 'questions/index.html'
     QUESTIONS_PER_PAGE = 3
@@ -103,7 +105,8 @@ class TagFilteredQuestionsView(TemplateView):
     
     def dispatch(self, request, *args, **kwargs):
         return super(TagFilteredQuestionsView, self).dispatch(request, *args, **kwargs)
-    
+
+@method_decorator(login_required, name = 'dispatch')    
 class NewQuestionView(TemplateView):
     template_name = "questions/ask.html"
     def get_context_data(self, **kwargs):

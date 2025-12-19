@@ -27,10 +27,23 @@
         <div class = "profile-wrapper">
             <div class = "photo"><img src="{% static "img/profilepic.png" %}"></div>
             <div class = "profile-text">
-                <div class = "profile-name">Sad Frog</div>
+                <div class = "profile-name">
+                    {%if user.is_authenticated%}
+                        {{ user.username }}
+                    {%endif%}
+                    {%if not user.is_authenticated%}
+                        Guest
+                    {%endif%}
+                </div>
                 <div>
-                    <a href = "{%url 'profile' %}">Settings</a>
-                    <a href = "{%url 'logout' %}" >Log out</a>
+                    {%if user.is_authenticated%}
+                        <a href = "{%url 'profile' %}">Settings</a>
+                        <a href = "{%url 'logout' %}" >Log out</a>
+                    {%endif%}
+                    {%if not user.is_authenticated%}
+                        <a href = "{%url 'login' %}">Log in</a>
+                        <a href = "{%url 'signup' %}">Sign up</a>
+                    {%endif%}
                 </div>
             </div>
         </div>

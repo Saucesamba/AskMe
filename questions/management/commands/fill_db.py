@@ -1,12 +1,10 @@
 import random
 from django.core.management.base import BaseCommand
-from django.contrib.auth.models import User
-
-from users.models import UserProfile
+from django.contrib.auth import get_user_model
 from questions.models import Question, QuestionAnswer, Tag, QuestionLike, AnswerLike
-
-
 from faker import Faker
+
+
 class Command(BaseCommand):
     help = "Заполнение БД"
 
@@ -23,22 +21,25 @@ class Command(BaseCommand):
         num_questions = count * 10
         num_answers = count * 100
         #num_marks = count * 200
+        
+        User = get_user_model()
 
         users = []
         for i in range (num_users):
-            userb, _ = User.objects.update_or_create(
-                username = f"user {i}",
-                email = fake.email(),
-                is_staff = False,
-                is_superuser = False,
-                password = "123456"
+            user, created = User.objects.get_or_create(
+                username=f"user{i}",  
+                defaults={
+                    'email': fake.email(),
+                    'is_staff': False,
+                    'is_superuser': False,
+                    'nickname': fake.user_name(),
+                    'avatar': None
+                }
             )
-            userProf,_ = UserProfile.objects.update_or_create(
-                user = userb,
-                nickname = fake.user_name(),
-                avatar = None
-            )
-            users.append(userProf)
+            if created:
+                user.set_password("123456") 
+                user.save()
+            users.append(user)
         
         print("Users created")
 

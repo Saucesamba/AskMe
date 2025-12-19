@@ -7,6 +7,17 @@
 <!-- Левая колонка, в которой основная информация текущей страницы -->
 {%block content %}
     <div class = "main-container">
+
+        {%if messages %}
+            <div class ="msgs">
+                {%for msg in messages%}
+                    <div class = "msg-row">
+                        {{msg}}
+                    </div>
+                {%endfor%}
+            </div>
+        {% endif %}
+
         <div class = "h2-container">
             {%if meta.page_name == 'main'%}
                 <h2>New Questions</h2>

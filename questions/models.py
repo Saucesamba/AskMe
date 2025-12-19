@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import Q
 
 from users.models import UserProfile
 # миксин для даты создания и обновления

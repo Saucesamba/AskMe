@@ -36,7 +36,7 @@
         </section>
         <section class = "answers">
             {%for answer in answers%}
-            <div class="answer-wrapper">
+            <div class="answer-wrapper" id="answer-{{ answer.id }}">
                 <div class = "photo"><img src="{%static 'img/profilepic.png'%}"></div>
                 <div>
                     <div class="text-wrapper">
@@ -61,15 +61,27 @@
             {%endfor%}
 
         </section>
+
         <section class = "new-answer">
-            <div class="input-answer">
-                <div>
-                    <textarea class="answer-field" placeholder="Input your answer here" id="ans-field" rows="5"></textarea>
+                <form method="post" action="{% url 'question_details' question.pk %}">
+                {% csrf_token %}
+                <div class="input-answer">
+                    <div>
+                        {{ answer_form.text }}
+                        {% if answer_form.text.errors %}
+                            <div style="color:red; font-size: 1rem">
+                                {% for error in answer_form.text.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="btn-wrapper">
+                        <button type="submit" class="ans-btn">Answer</button>
+                    </div>
                 </div>
-                <div class="btn-wrapper">
-                    <a href = "{%url 'index' %}" type = "button" class = "ans-btn"> Answer</a>
-                </div>
-            </div>
+            </form>
         </section>
+
     </div>
 {%endblock%}

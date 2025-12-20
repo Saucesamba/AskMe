@@ -23,8 +23,13 @@
 
                 <div class="login-form">
                     <div class="form-row">  
-                        <label for="{{ form.username.id_for_label }}">Username</label>
-                            {{ form.username }}
+                        <div class="form-label">Username</div>
+                        <input type="text" 
+                            class="input-field"  
+                            placeholder="Enter your username" 
+                            name="{{ form.username.name }}"
+                            id="{{ form.username.id_for_label }}">
+
                         {% if form.username.errors %}
                             <div style="color:red; font-size: 1rem">
                                 {% for error in form.username.errors %}
@@ -34,8 +39,13 @@
                         {% endif %}
                     </div>
                     <div class="form-row">  
-                        <label for="{{ form.password.id_for_label }}">Password</label>
-                            {{ form.password }}
+                        <div class="form-label">Password</div>
+                        <input type="password" 
+                            class="input-field" 
+                            placeholder="Enter your password" 
+                            name="{{ form.password.name }}"
+                            id="{{ form.password.id_for_label }}">
+
                         {% if form.password.errors %}
                             <div style="color:red; font-size: 1rem">
                                 {% for error in form.password.errors %}
@@ -44,7 +54,14 @@
                             </div>
                         {% endif %}
                     </div>
-                    <button type = "submit" class = "btn">Login</button>
+                        <div class="btn-container">
+                        <div>
+                            <button type="submit" class="login-btn">Log in</button>
+                        </div>
+                        <div>
+                            <a href="{% url 'signup' %}" class="account-link">Create new account</a>
+                        </div>
+                    </div>
                 </div>
             </form>
 

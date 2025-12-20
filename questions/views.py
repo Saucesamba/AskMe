@@ -1,15 +1,17 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, reverse
 
 from django.http import JsonResponse, HttpResponse
 from django.views.generic import TemplateView
 import math
+from django.http import HttpResponseRedirect
+
 
 from questions.pagination import paginate
 from questions.models import Tag, Question
 from django.shortcuts import get_object_or_404
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
-from .forms import QuestionForm
+from .forms import QuestionForm, AnswerForm
 
  
 @method_decorator(login_required, name = 'dispatch')
@@ -73,7 +75,25 @@ class OneQuestionView(TemplateView):
         context["answers"] = answers[:15]
         context["question"] = q
         context['tags'] = Tag.objects.all()[:12]
+        context['answer_form'] = AnswerForm()
         return context
+    
+    def post(self, request, *args, **kwargs):
+        q = get_object_or_404(Question, pk=self.kwargs.get("pk"))
+        form = AnswerForm(request.POST)
+        
+        if form.is_valid():
+            answer = form.save(commit=False)
+            answer.question = q
+            answer.author = request.user
+            answer.like_count = 0 
+            answer.save()
+
+            redirect_url = reverse('question_details', kwargs={'pk': q.pk})
+            return HttpResponseRedirect(f"{redirect_url}#answer-{answer.id}")
+        
+        return render(request, self.template_name, {'form': form})
+
     
     def dispatch(self, request, *args, **kwargs):
         return super(OneQuestionView, self).dispatch(request, *args, **kwargs)

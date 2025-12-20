@@ -21,7 +21,11 @@
                     required
                 >
                 {% if form.title.errors %}
-                    <div class="error-text">{{ form.title.errors }}</div>
+                    <div style="color:red; font-size: 1rem">
+                        {% for error in form.title.errors %}
+                            {{ error }}
+                        {% endfor %}
+                    </div>
                 {% endif %}
             </div>
             
@@ -35,7 +39,11 @@
                     required
                 ></textarea>
                 {% if form.question_text.errors %}
-                    <div class="error-text">{{ form.question_text.errors }}</div>
+                    <div style="color:red; font-size: 1rem">
+                        {% for error in form.question_text.errors %}
+                            {{ error }}
+                        {% endfor %}
+                    </div>
                 {% endif %}
             </div>
             
@@ -48,13 +56,17 @@
                     id="tags-field"
                 >
                 {% if form.tags_input.errors %}
-                    <div class="error-text">{{ form.tags_input.errors }}</div>
+                    <div style="color:red; font-size: 1rem">
+                        {% for error in form.tags_input.errors %}
+                            {{ error }}
+                        {% endfor %}
+                    </div>
                 {% endif %}
             </div>
         
             <div class="btn-wrapper">
                 <button type="submit" class="ans-btn">ASK!</button>
-                <a href="{% url 'index' %}">Cancel</a>
+                <a href="{% url 'index' %}" class="account-link">Cancel</a>
             </div>
         </form>
     </div>

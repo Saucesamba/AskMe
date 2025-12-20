@@ -32,7 +32,28 @@ class LoginView(TemplateView):
        
 
 class RegisterView(TemplateView):
+    http_method_names = ['get', 'post']
     template_name = "users/signup.html"
+    
+    def get_context_data(self, **kwargs):
+        form = LoginForm()
+        context = super(LoginView,self).get_context_data(**kwargs)
+        context['form'] = form
+        return context
+    
+    def post(self, request, *args, **kwargs):
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            login(request, form.user)
+            messages.add_message(request, messages.SUCCESS, "You successfully authenticated!")
+            return redirect('/')
+        
+        context = super(LoginView,self).get_context_data(**kwargs)
+        context['form'] = form
+        return render (request, self.template_name, {
+            'form': form,
+        })   
+
 
 class ProfileView(TemplateView):
     template_name = "users/profile.html"

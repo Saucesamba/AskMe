@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 
 from django.http import JsonResponse, HttpResponse
 from django.views.generic import TemplateView
@@ -9,7 +9,9 @@ from questions.models import Tag, Question
 from django.shortcuts import get_object_or_404
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
+from .forms import QuestionForm
 
+ 
 @method_decorator(login_required, name = 'dispatch')
 class MainPageView(TemplateView):
     template_name = 'questions/index.html'
@@ -106,14 +108,38 @@ class TagFilteredQuestionsView(TemplateView):
     def dispatch(self, request, *args, **kwargs):
         return super(TagFilteredQuestionsView, self).dispatch(request, *args, **kwargs)
 
+
+
 @method_decorator(login_required, name = 'dispatch')    
 class NewQuestionView(TemplateView):
+    http_method_names = ['get','post']
     template_name = "questions/ask.html"
+
     def get_context_data(self, **kwargs):
-        context = super(NewQuestionView,self).get_context_data(**kwargs)
+        context = super(NewQuestionView, self).get_context_data(**kwargs)
+        context['form'] = QuestionForm()
         context['tags'] = Tag.objects.all()[:12]
         return context
     
+    def post(self, request, *args, **kwargs):
+        form = QuestionForm(request.POST)
+        if form.is_valid():
+            question = form.save(commit=False)
+            question.author = request.user
+            question.like_count = 0
+            question.answer_count = 0
+            question.save()
+
+            tags_input = form.cleaned_data.get('tags_input', [])
+            tags = []
+            for tag_name in tags_input:
+                tag, _ = Tag.objects.get_or_create(title=tag_name.lower())
+                tags.append(tag)
+            question.tags.set(tags)
+            return redirect('question_details', pk=question.pk)
+        
+        return render(request, self.template_name, {'form': form})
+
     def dispatch(self, request, *args, **kwargs):
         return super(NewQuestionView,self).dispatch(request, *args, **kwargs)
     

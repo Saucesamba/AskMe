@@ -31,3 +31,6 @@ class LoginForm(forms.Form):
                      'Неверное имя пользователя или пароль'
                 )
         return cleaned_data
+
+class SignUpForm(forms.Form):
+    pass

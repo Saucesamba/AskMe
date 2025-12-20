@@ -7,20 +7,56 @@
         <div class = "h2-container">
             <h2>New Question</h2>
         </div>
-        <div class="input-question">
+         <form method="POST" action="{% url 'ask' %}" class="input-question">
+            {% csrf_token %}
+
             <div data-label="Title">
-                <input type="text" class="answer-field title-field" placeholder="Enter your question title" id="title-field">
+                <input 
+                    type="text" 
+                    class="answer-field title-field" 
+                    placeholder="Enter your question title" 
+                    name="title" 
+                    id="title-field"
+                    
+                    required
+                >
+                {% if form.title.errors %}
+                    <div class="error-text">{{ form.title.errors }}</div>
+                {% endif %}
             </div>
+            
             <div data-label="Text">
-                <textarea class="answer-field text-field" placeholder="Give a bit more info about your question" id="ans-field" rows="5"></textarea>
+                <textarea 
+                    class="answer-field text-field" 
+                    placeholder="Give a bit more info about your question" 
+                    name="question_text" 
+                    id="question-text-field" 
+                    rows="5"
+                    required
+                ></textarea>
+                {% if form.question_text.errors %}
+                    <div class="error-text">{{ form.question_text.errors }}</div>
+                {% endif %}
             </div>
-                <div data-label="Tags">
-                <textarea class="answer-field tags-field" placeholder="Add tags to other people can find your question" id="ans-field" rows="5"></textarea>
+            
+            <div data-label="Tags">
+                <input 
+                    type="text" 
+                    class="answer-field tags-field" 
+                    placeholder="Add tags separated by commas (e.g., python, django, web)" 
+                    name="tags_input" 
+                    id="tags-field"
+                >
+                {% if form.tags_input.errors %}
+                    <div class="error-text">{{ form.tags_input.errors }}</div>
+                {% endif %}
             </div>
+        
             <div class="btn-wrapper">
-                <a href = "{%url 'index' %}" class = "ans-btn">ASK!</a>
+                <button type="submit" class="ans-btn">ASK!</button>
+                <a href="{% url 'index' %}">Cancel</a>
             </div>
-        </div>
+        </form>
     </div>
 {%endblock%}
         

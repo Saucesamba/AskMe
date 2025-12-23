@@ -3,9 +3,11 @@
 {%load static%}
 
 {%block title%}Question{%endblock%}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 {%block content%}        
     <div class = "main-container">
+        {% csrf_token %}
         <section id = "start-question">
             <div class="question-wrapper">
                 <div class = "photo"><img src="{%static 'img/profilepic.png'%}"></div>
@@ -26,10 +28,11 @@
                                 <a href="{% url 'tag' tag %}">{{ tag }}</a>
                             {% endfor %}
                         </div>
-                        <div class = "like-btn">
-                            {{question.like_count}}
-                            <input type ="checkbox" id = "like-btn">
-                        </div>
+                        <div class="rating" id="{{ question.id }}-rating">
+                            <span class="rating__value" id="{{ question.id }}-rating_value">{{ question.like_count }}</span>
+                            <button type="button" onclick="sendLike('question', {{ question.id }})" class="rating__btn">Like</button>
+                            <button type="button" onclick="sendDislike('question', {{ question.id }})" class="rating__btn">Dislike</button>
+                            </div>
                     </div>
                 </div>
             </div>
@@ -46,14 +49,24 @@
                     </div>
 
                     <div class="answer-lowbar">
-                        <div class = "correct-btn">
-                            <input type ="checkbox" id = "correct-btn">
+                        {% if user.is_authenticated and user == question.author %}
+
+                        <div class="correct-btn">
+                            <input
+                                type="checkbox"
+                                id="correct-{{ answer.id }}"
+                                onchange="toggleCorrect({{ question.id }}, {{ answer.id }}, this.checked)"
+                                {% if answer.is_correct %}checked{% endif %}
+                            >
                             Correct!
                         </div>
-                        <div class = "like-btn">
-                            {{answer.like_count}}
-                            <input type ="checkbox" id = "like-btn">
-                        </div>                            
+                        {%endif%}
+
+                        <div class="rating" id="{{ answer.id }}-rating">
+                            <span class="rating__value" id="{{ answer.id }}-rating_value">{{ answer.like_count }}</span>
+                            <button type="button" onclick="sendLike('answer', {{ answer.id }})" class="rating__btn">Like</button>
+                            <button type="button" onclick="sendDislike('answer', {{ answer.id }})" class="rating__btn">Dislike</button>
+                        </div>                          
                     </div>
 
                 </div>
@@ -85,3 +98,7 @@
 
     </div>
 {%endblock%}
+
+{% block scripts %}
+    <script src="{% static 'js/script.js' %}" defer></script>
+{% endblock %}

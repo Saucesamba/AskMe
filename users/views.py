@@ -16,7 +16,7 @@ class LoginView(TemplateView):
         context['form'] = form
         return context
     
-    def post(self, request, *args, **kwargs):
+    def post(self, request, *args, **kwargs):  
         form = LoginForm(request.POST)
         if form.is_valid():
             login(request, form.user)

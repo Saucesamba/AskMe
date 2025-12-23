@@ -25,7 +25,11 @@
         </div>
 
         <div class = "profile-wrapper">
-            <div class = "photo"><img src="{% static "img/profilepic.png" %}"></div>
+            {% if user.avatar %}
+                <div class = "photo"><img src="{{ user.avatar.url }}" alt="avatar"></div>
+                {% else %}
+                <div class = "photo"> <img src="{% static 'img/profilepic.png' %}" alt="avatar"></div>
+                {% endif %}
             <div class = "profile-text">
                 <div class = "profile-name">
                     {%if user.is_authenticated%}

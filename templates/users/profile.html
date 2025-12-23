@@ -10,9 +10,9 @@
         <div class="profile-header">
             <div class = "photo">
                 {% if user.avatar %}
-                    <img src="{{ user.avatar.url }}" alt="{{ user.nickname }}" class="avatar-img">
+                    <div class = "photo"><img src="{{ user.avatar.url }}" class="avatar-img"></div>
                 {% else %}
-                    <img src="{% static 'img/profilepic.png' %}" alt="Default avatar">
+                    <div class = "photo"><img src="{% static 'img/profilepic.png' %}" alt="Default avatar"></div>
                 {% endif %}
             </div>
 
@@ -22,7 +22,7 @@
         </div>
 
         
-        <form method="POST" action="{% url 'profile' %}" class="login-form">
+        <form method="POST" action="{% url 'profile' %}" class="login-form" enctype="multipart/form-data">
             {% csrf_token %}
 
             <div class="form-row">

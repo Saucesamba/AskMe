@@ -212,11 +212,6 @@ class AnswerLikeAPIView(View):
         is_like = json.loads(request.body.decode('utf-8')).get('is_like', True)
         answer = get_object_or_404(QuestionAnswer, pk=answer_id)
 
-        if answer.author == request.user:
-            return JsonResponse({
-                'success': False,
-                'error': "Вы являетесь автором вопроса."
-            }, status=400)
 
         like_exists = AnswerLike.objects.filter(author=request.user, answer_id=answer_id).first()
 

@@ -39,7 +39,13 @@
         {% for q in questions %}
             <div class="question-wrapper">
                 {% comment %} <div class = "photo"><img src="{{ q.photo }}"></div> {% endcomment %}
-                <div class = "photo"><img src="{% static 'img/profilepic.png' %}"></div>
+                <div class="photo">
+                    {% if q.author.avatar %}
+                        <div class = "photo"><img src="{{ q.author.avatar.url }}" alt="avatar"></div>
+                    {% else %}
+                        <div class = "photo"><img src="{% static 'img/profilepic.png' %}" alt="avatar"></div>
+                    {% endif %}
+                </div>
                 <div>
                     <div class="text-wrapper">
                         <div class = "h2-container">
@@ -64,8 +70,10 @@
                         </div>
                         <div class="rating" id="{{ q.id }}-rating">
                             <span class="rating__value" id="{{ q.id }}-rating_value">{{ q.like_count }}</span>
+                            {% if user.is_authenticated and user != q.author %}
                             <button type="button" onclick="sendLike('question', {{ q.id }})" class="rating__btn">Like</button>
                             <button type="button" onclick="sendDislike('question', {{ q.id }})" class="rating__btn">Dislike</button>
+                            {% endif %}
                         </div>
 
                     </div>

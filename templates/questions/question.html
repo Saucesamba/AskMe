@@ -10,7 +10,13 @@
         {% csrf_token %}
         <section id = "start-question">
             <div class="question-wrapper">
-                <div class = "photo"><img src="{%static 'img/profilepic.png'%}"></div>
+                <div class="photo">
+                    {% if question.author.avatar %}
+                        <div class = "photo"><img src="{{ question.author.avatar.url }}" alt="avatar"></div>
+                    {% else %}
+                       <div class = "photo"><img src="{% static 'img/profilepic.png' %}" alt="avatar"></div>
+                    {% endif %}
+                </div>
                 <div>
                     <div class="text-wrapper">
                         <div class = "h2-container">
@@ -30,8 +36,10 @@
                         </div>
                         <div class="rating" id="{{ question.id }}-rating">
                             <span class="rating__value" id="{{ question.id }}-rating_value">{{ question.like_count }}</span>
+                            {% if user.is_authenticated and user != question.author %}
                             <button type="button" onclick="sendLike('question', {{ question.id }})" class="rating__btn">Like</button>
                             <button type="button" onclick="sendDislike('question', {{ question.id }})" class="rating__btn">Dislike</button>
+                            {% endif %}
                             </div>
                     </div>
                 </div>
@@ -40,7 +48,13 @@
         <section class = "answers">
             {%for answer in answers%}
             <div class="answer-wrapper" id="answer-{{ answer.id }}">
-                <div class = "photo"><img src="{%static 'img/profilepic.png'%}"></div>
+                <div class="photo">
+                    {% if answer.author.avatar %}
+                       <div class = "photo"> <img src="{{ answer.author.avatar.url }}" alt="avatar"> </div>
+                    {% else %}
+                       <div class = "photo"> <img src="{% static 'img/profilepic.png' %}" alt="avatar"></div>
+                    {% endif %}
+                </div>
                 <div>
                     <div class="text-wrapper">
                         <div>

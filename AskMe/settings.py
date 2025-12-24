@@ -162,3 +162,21 @@ CACHES = {
         "KEY_PREFIX": config.get('redis', 'PREFIX', fallback='dz6')
     }
 }
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': config.get('DB', 'NAME', fallback='askme_db'),
+        'USER': config.get('DB', 'USER', fallback='askme_user'),
+        'PASSWORD': config.get('DB', 'PASSWORD', fallback='askme_pass'),
+        'HOST': config.get('DB', 'HOST', fallback='localhost'),
+        'PORT': config.getint('DB', 'PORT', fallback=5433),
+        'OPTIONS': {
+            'client_encoding': 'UTF8',
+            'options': '-c client_encoding=utf8'
+        }
+    }
+}
+
+
+

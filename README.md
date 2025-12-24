@@ -37,3 +37,4 @@ python manage.py fill_db [ratio]
  - оценок пользователей - ratio * 200;
 
 
+

@@ -11,7 +11,8 @@ urlpatterns = [
 
     path('api/question/<int:pk>/toggle_like',QuestionLikeAPIView.as_view(), name = 'question_like'),
     path('api/answer/<int:pk>/toggle_like', AnswerLikeAPIView.as_view(), name = 'answer_like'),
-    path('api/question/<int:pk>/correct_answer', AnswerCorrectAPIView.as_view(), name = 'correct')
+    path('api/question/<int:pk>/correct_answer', AnswerCorrectAPIView.as_view(), name = 'correct'),
+    path('search/', SearchView.as_view(), name='search'),
 
 ]
 

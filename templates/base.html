@@ -19,10 +19,20 @@
         <a href = "{%url 'index'%}"><img src="{% static "img/logo.png" %}" class = "logo"></a>
 
         <div class="search-container">
-            <input type = "text" class = "searchbar" placeholder="Search" id = "searchbar">
-            
-            <a href="{%url 'ask'%}" class = "ask-button">ASK!</a>
+            <form action="{% url 'search' %}" method="get" id="search-form">
+                <input type="text" 
+                    class="searchbar" 
+                    placeholder="Найти вопрос..." 
+                    id="searchbar"
+                    name="q"
+                    value="{{ request.GET.q|default:'' }}"
+                    autocomplete="off">
+        
+                <button type="submit" class="ask-button">Find</button>
+            </form>
         </div>
+
+        <a href="{%url 'ask'%}" class = "ask-button">ASK Question!</a>
 
         <div class = "profile-wrapper">
             {% if user.avatar %}

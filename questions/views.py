@@ -21,6 +21,10 @@ from django.contrib.auth.decorators import login_required
 from .forms import QuestionForm, AnswerForm
 from django.views.decorators.csrf import csrf_exempt
 
+from .search import SearchManagerMixin
+
+
+
 class DjangoCacheView(TemplateView):
     http_method_names = ['get', 'post']
     template_name = 'core/cache_form.html'
@@ -366,7 +370,38 @@ class AnswerCorrectAPIView(View):
             'correct': answer.is_correct,
         }, status=200)
         
+class SearchView(CachedTemplateView):
+    template_name = 'questions/index.html'
+    QUESTIONS_PER_PAGE = 10
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
         
+        search_query = self.request.GET.get('q', '').strip()
+        page = int(self.request.GET.get('page', 1))
+        
+        if not search_query:
+            questions = Question.objects.get_new_questions()
+            context['search_query'] = ''
+            context['search_info'] = 'Введите запрос для поиска'
+        else:
+            questions = Question.objects.search_union(search_query)
+            
+            context['search_query'] = search_query
+            context['search_info'] = f'Найдено {questions.count()} результатов по запросу "{search_query}"'
+
+        ctx, q = paginate(questions, page, self.QUESTIONS_PER_PAGE)
+        context.update(ctx)
+        context['questions'] = q
+
+        context['meta'] = {
+            'page_name': 'search',
+            'search_query': search_query
+        }
+        
+        return context
+    
+
 
 
 

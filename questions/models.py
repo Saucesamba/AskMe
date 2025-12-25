@@ -2,6 +2,7 @@ from django.db import models
 from django.db.models import Q
 
 from django.conf import settings
+from .search import SearchManagerMixin
 
 # миксин для даты создания и обновления
 class QuestionTimeMixin(models.Model):
@@ -22,7 +23,14 @@ class Tag(models.Model):
         return self.title
 
 
-class QuestionManager(models.Manager):
+class QuestionManager(SearchManagerMixin, models.Manager):
+    psql_field_weights = {
+        'title': 'A',          
+        'question_text': 'B',  
+        'tags': 'C',     
+    }
+    
+    config = 'simple' 
 
     def get_hot_questions(self):
         return Question.objects.all().filter(is_hot = True)

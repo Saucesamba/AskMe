@@ -22,6 +22,39 @@ services:
     restart: always
     ports:
       - "6379:6379"
+      
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  centrifugo:
+    image: centrifugo/centrifugo:v5
+    restart: always
+    volumes:
+      - centrifugo_data:/centrifugo/data
+      - ./conf/centrifugo.json:/centrifugo/config.json 
+
+    environment:
+      - CENTRIFUGO_HTTP_PORT=8035
+      - CENTRIFUGO_HTTP_ADDRESS=0.0.0.0
+
+    ports:
+      - "8035:8035"  
+    command: centrifugo -c config.json
+
+    depends_on:
+      redis:
+        condition: service_healthy
+
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8035/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
 
 volumes:
   postgres_data:
+  centrifugo_data:

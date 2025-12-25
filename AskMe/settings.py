@@ -172,5 +172,12 @@ CACHES = {
 
 
 
-
+CENTRIFUGE_HOST = config.get('centrifuge', 'HOST', fallback='http://localhost:8035')
+CENTRIFUGE_URL = config.get('centrifuge', 'URL', fallback='/centrifuge')
+CENTRIFUGE_API_KEY = config.get('centrifuge', 'API_KEY', fallback='')
+CENTRIFUGE_SECRET = config.get('centrifuge', 'SECRET', fallback='')
+CENTRIFUGE_TOKEN_EXPIRE = config.getint('centrifuge', 'TOKEN_EXPIRE', fallback=120 * 60)
+CENTRIFUGE_TIMEOUT = config.getint('centrifuge', 'TIMEOUT', fallback=1)
+CENTRIFUGE_ENABLED = config.getboolean('centrifuge', 'ENABLED', fallback=False)
+ 
 

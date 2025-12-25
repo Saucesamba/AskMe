@@ -19,6 +19,15 @@
             </div>
         {% endif %}
 
+        {% if meta.page_name == 'search' and search_query %}
+            <div class="search-results-header">
+                <h3>Результаты поиска</h3>
+                <p>По запросу: <strong>"{{ search_query }}"</strong> 
+                   найдено {{ questions.paginator.count }} вопросов</p>
+                <a href="{% url 'index' %}" class="back-link">← Вернуться ко всем вопросам</a>
+            </div>
+        {% endif %}
+        
         <div class = "h2-container">
             {%if meta.page_name == 'main'%}
                 <h2>New Questions</h2>

@@ -53,7 +53,7 @@ class Question(QuestionTimeMixin):
     is_hot = models.BooleanField(default=True) 
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     like_count = models.IntegerField()
-    answer_count = models.IntegerField()
+    answer_count = models.IntegerField( )
 
     objects = QuestionManager()
     
@@ -81,12 +81,16 @@ class QuestionAnswer(QuestionTimeMixin):
     like_count = models.IntegerField()
     
     def save(self, *args, **kwargs):
-        self.question.answer()
+        is_new = self.pk is None
         super().save(*args, **kwargs)
+        if is_new:
+            self.question.answer()
 
     def like(self, val):
         self.like_count += val
         self.save()
+    
+
 
     def __str__(self):
         return f"Ответ на вопрос {self.question} от пользователя  {self.author}"

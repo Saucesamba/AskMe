@@ -3,11 +3,12 @@
 {%load static%}
 
 {%block title%}Question List{%endblock%}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <!-- Левая колонка, в которой основная информация текущей страницы -->
 {%block content %}
     <div class = "main-container">
-
+        {% csrf_token %}
         {%if messages %}
             <div class ="msgs">
                 {%for msg in messages%}
@@ -38,7 +39,13 @@
         {% for q in questions %}
             <div class="question-wrapper">
                 {% comment %} <div class = "photo"><img src="{{ q.photo }}"></div> {% endcomment %}
-                <div class = "photo"><img src="{% static 'img/profilepic.png' %}"></div>
+                <div class="photo">
+                    {% if q.author.avatar %}
+                        <div class = "photo"><img src="{{ q.author.avatar.url }}" alt="avatar"></div>
+                    {% else %}
+                        <div class = "photo"><img src="{% static 'img/profilepic.png' %}" alt="avatar"></div>
+                    {% endif %}
+                </div>
                 <div>
                     <div class="text-wrapper">
                         <div class = "h2-container">
@@ -61,10 +68,14 @@
                         <div class = "answer-btn">
                             <a href ="{% url 'question_details' q.id %}">answer({{q.answer_count}})</a>
                         </div>
-                        <div class = "like-btn">
-                            {{q.like_count}}
-                            <input type ="checkbox" id = "like-btn">
+                        <div class="rating" id="{{ q.id }}-rating">
+                            <span class="rating__value" id="{{ q.id }}-rating_value">{{ q.like_count }}</span>
+                            {% if user.is_authenticated and user != q.author %}
+                            <button type="button" onclick="sendLike('question', {{ q.id }})" class="rating__btn">Like</button>
+                            <button type="button" onclick="sendDislike('question', {{ q.id }})" class="rating__btn">Dislike</button>
+                            {% endif %}
                         </div>
+
                     </div>
                 </div>
             </div>
@@ -73,4 +84,8 @@
         {%include "questions/pagination.html"%}
         
     </div>
+{% endblock %}
+
+{% block scripts %}
+    <script src="{% static 'js/script.js' %}" defer></script>
 {% endblock %}

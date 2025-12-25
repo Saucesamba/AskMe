@@ -1,7 +1,8 @@
 from django.db import models
+from django.db.models import Q
 
-from users.models import UserProfile
-from questions.utils import QuestionManager
+from django.conf import settings
+
 # миксин для даты создания и обновления
 class QuestionTimeMixin(models.Model):
     class Meta:
@@ -21,6 +22,26 @@ class Tag(models.Model):
         return self.title
 
 
+class QuestionManager(models.Manager):
+
+    def get_hot_questions(self):
+        return Question.objects.all().filter(is_hot = True)
+
+    def get_new_questions(self):
+        return Question.objects.all().order_by('-created_at')
+    
+    def get_tagged_questions(self, tag):
+        if not tag:
+            questions = Question.objects.all()
+        else:
+            questions = Question.objects.all().filter(Q(tags__title = tag))
+        
+        return questions.order_by("-created_at")
+    
+    def get_question_by_id(self, id):
+        return Question.objects.get(id = id)
+    
+
 class Question(QuestionTimeMixin):
     class Meta: 
         verbose_name = 'Вопрос'
@@ -30,7 +51,7 @@ class Question(QuestionTimeMixin):
     question_text = models.TextField(max_length=500, blank=True)
     tags = models.ManyToManyField(Tag, blank = True)
     is_hot = models.BooleanField(default=True) 
-    author = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     like_count = models.IntegerField()
     answer_count = models.IntegerField()
 
@@ -53,7 +74,7 @@ class QuestionAnswer(QuestionTimeMixin):
         verbose_name = 'Ответ'
         verbose_name_plural = 'Ответы'
     
-    author = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     text = models.TextField(max_length=500 )
     is_correct = models.BooleanField(default=False)
     question = models.ForeignKey(Question, on_delete=models.CASCADE,related_name="answers",)
@@ -74,7 +95,7 @@ class QuestionAnswer(QuestionTimeMixin):
 class AnswerLike(models.Model):
     status = models.BooleanField(default=True) # лайк или дизлайк True - лайк, False - дизлайк
     answer = models.ForeignKey(QuestionAnswer, on_delete=models.CASCADE)
-    author = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 
     def save(self, *args, **kwargs):
         if self.status == True:
@@ -93,7 +114,7 @@ class AnswerLike(models.Model):
 class QuestionLike(models.Model):
     status = models.BooleanField(default=True) # лайк или дизлайк True - лайк, False - дизлайк
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
-    author = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     
     def save(self, *args, **kwargs):
         if self.status == True:

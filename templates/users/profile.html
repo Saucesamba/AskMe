@@ -9,41 +9,99 @@
     <div class = "main-container">
         <div class="profile-header">
             <div class = "photo">
-                <img src="{% static 'img/profilepic.png' %}">
+                {% if user.avatar %}
+                    <img src="{{ user.avatar.url }}" alt="{{ user.nickname }}" class="avatar-img">
+                {% else %}
+                    <img src="{% static 'img/profilepic.png' %}" alt="Default avatar">
+                {% endif %}
             </div>
+
             <div class = "h2-container">
                 <h2>Profile: {{user.nickname}}</h2>
             </div>
         </div>
 
-        <div class="login-form">
+        
+        <form method="POST" action="{% url 'profile' %}" class="login-form">
+            {% csrf_token %}
 
             <div class="form-row">
                 <div class="form-label">Login</div>
-                <input type="text" class="input-field" placeholder="{{user.login}}" id="login-field">
+                {{ form.username }}
+
+                {% if form.username.errors %}
+                    <div style="color:red; font-size: 1rem">
+                        {% for error in form.username.errors %}
+                            {{ error }}
+                        {% endfor %}
+                    </div>
+                {% endif %}
             </div>
 
             <div class="form-row">
                 <div class="form-label">Email</div>
-                <input type="text" class="input-field" placeholder="{{user.email}}" id="email-field">
+                {{ form.email }}
+
+                {% if form.email.errors %}
+                    <div style="color:red; font-size: 1rem">
+                        {% for error in form.email.errors %}
+                            {{ error }}
+                        {% endfor %}
+                    </div>
+                {% endif %}
             </div>
 
             <div class="form-row">
                 <div class="form-label">Nickname</div>
-                <input type="text" class="input-field" placeholder="{{user.nickname}}" id="nickname-field">
+                {{ form.nickname }}
+
+                {% if form.nickname.errors %}
+                    <div style="color:red; font-size: 1rem">
+                        {% for error in form.nickname.errors %}
+                            {{ error }}
+                        {% endfor %}
+                    </div>
+                {% endif %}
             </div>
 
             <div class="form-row">
                 <div class="form-label">Upload Avatar</div>
-                <input type="file" class="input-field" id="file-field">
-            </div>
+                {{ form.avatar }}
 
+                {% if form.avatar.errors %}
+                    <div style="color:red; font-size: 1rem">
+                        {% for error in form.avatar.errors %}
+                            {{ error }}
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
 
             <div class="btn-container">
                 <div>
-                    <a href = "{%url 'index'%}" class = "login-btn">Save</a>
+                    <button type="submit" class="login-btn">Save</button>
+                    <a href="{% url 'index' %}" class="account-link">Cancel</a>
                 </div>
             </div>
-        </div>
+        </form>
+
+        {% if messages %}
+            <div class="messages">
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        {% if form.non_field_errors %}
+            <div class="error-message" style ="color:red">
+                {% for error in form.non_field_errors %}
+                    {{ error }}
+                {% endfor %}
+            </div>
+        {% endif %}
+        
     </div>
 {%endblock%}

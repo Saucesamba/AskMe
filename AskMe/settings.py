@@ -17,7 +17,7 @@ from configparser import ConfigParser
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
+ 
 config = ConfigParser()
 config.read(os.path.join(BASE_DIR, 'conf', 'django.conf'))
 
@@ -113,9 +113,14 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-# AUTH_USER_MODEL = 'users.UserProfile'
+AUTH_USER_MODEL = 'users.UserProfile'
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+]
 
-
+LOGIN_URL = '/login/'
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/

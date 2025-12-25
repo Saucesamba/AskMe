@@ -1,19 +1,20 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect, reverse
 
 from django.http import JsonResponse, HttpResponse
 from django.views.generic import TemplateView
 import math
+from django.http import HttpResponseRedirect
+
 
 from questions.pagination import paginate
-from questions.utils import QuestionManager
 from questions.models import Tag, Question
 from django.shortcuts import get_object_or_404
+from django.utils.decorators import method_decorator
+from django.contrib.auth.decorators import login_required
+from .forms import QuestionForm, AnswerForm
 
-
-
-manager = QuestionManager()
-
-
+ 
+@method_decorator(login_required, name = 'dispatch')
 class MainPageView(TemplateView):
     template_name = 'questions/index.html'
     QUESTIONS_PER_PAGE = 7
@@ -38,6 +39,7 @@ class MainPageView(TemplateView):
     def dispatch(self, request, *args, **kwargs):
         return super(MainPageView, self).dispatch(request, *args, **kwargs)
 
+@method_decorator(login_required, name = 'dispatch')
 class HotQuestionsView(TemplateView):
     template_name = 'questions/index.html'
     QUESTIONS_PER_PAGE = 5
@@ -62,6 +64,7 @@ class HotQuestionsView(TemplateView):
     def dispatch(self, request, *args, **kwargs):
         return super(HotQuestionsView, self).dispatch(request, *args, **kwargs)
     
+@method_decorator(login_required, name = 'dispatch')   
 class OneQuestionView(TemplateView):
     template_name = 'questions/question.html'
 
@@ -72,13 +75,31 @@ class OneQuestionView(TemplateView):
         context["answers"] = answers[:15]
         context["question"] = q
         context['tags'] = Tag.objects.all()[:12]
+        context['answer_form'] = AnswerForm()
         return context
+    
+    def post(self, request, *args, **kwargs):
+        q = get_object_or_404(Question, pk=self.kwargs.get("pk"))
+        form = AnswerForm(request.POST)
+        
+        if form.is_valid():
+            answer = form.save(commit=False)
+            answer.question = q
+            answer.author = request.user
+            answer.like_count = 0 
+            answer.save()
+
+            redirect_url = reverse('question_details', kwargs={'pk': q.pk})
+            return HttpResponseRedirect(f"{redirect_url}#answer-{answer.id}")
+        
+        return render(request, self.template_name, {'form': form})
+
     
     def dispatch(self, request, *args, **kwargs):
         return super(OneQuestionView, self).dispatch(request, *args, **kwargs)
     
 
-
+@method_decorator(login_required, name = 'dispatch')
 class TagFilteredQuestionsView(TemplateView):
     template_name = 'questions/index.html'
     QUESTIONS_PER_PAGE = 3
@@ -106,14 +127,39 @@ class TagFilteredQuestionsView(TemplateView):
     
     def dispatch(self, request, *args, **kwargs):
         return super(TagFilteredQuestionsView, self).dispatch(request, *args, **kwargs)
-    
+
+
+
+@method_decorator(login_required, name = 'dispatch')    
 class NewQuestionView(TemplateView):
+    http_method_names = ['get','post']
     template_name = "questions/ask.html"
+
     def get_context_data(self, **kwargs):
-        context = super(NewQuestionView,self).get_context_data(**kwargs)
+        context = super(NewQuestionView, self).get_context_data(**kwargs)
+        context['form'] = QuestionForm()
         context['tags'] = Tag.objects.all()[:12]
         return context
     
+    def post(self, request, *args, **kwargs):
+        form = QuestionForm(request.POST)
+        if form.is_valid():
+            question = form.save(commit=False)
+            question.author = request.user
+            question.like_count = 0
+            question.answer_count = 0
+            question.save()
+
+            tags_input = form.cleaned_data.get('tags_input', [])
+            tags = []
+            for tag_name in tags_input:
+                tag, _ = Tag.objects.get_or_create(title=tag_name.lower())
+                tags.append(tag)
+            question.tags.set(tags)
+            return redirect('question_details', pk=question.pk)
+        
+        return render(request, self.template_name, {'form': form})
+
     def dispatch(self, request, *args, **kwargs):
         return super(NewQuestionView,self).dispatch(request, *args, **kwargs)
     

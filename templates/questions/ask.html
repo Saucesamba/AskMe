@@ -9,6 +9,10 @@
         </div>
          <form method="POST" action="{% url 'ask' %}" class="input-question">
             {% csrf_token %}
+            
+            {% if burst_error %}
+                <div style="color: red; font-size: 1rem">{{ burst_error }}</div>
+            {% endif %}
 
             <div data-label="Title">
                 <input 

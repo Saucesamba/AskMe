@@ -149,3 +149,34 @@ MEDIA_ROOT = BASE_DIR / 'media'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": config.get('redis', 'LOCATION', fallback='redis://localhost:6379/1'),
+        'TIMEOUT': config.getint('redis', 'LIFETIME', fallback=9660),
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        },
+        "KEY_PREFIX": config.get('redis', 'PREFIX', fallback='dz6')
+    }
+}
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': config.get('DB', 'NAME', fallback='askme_db'),
+        'USER': config.get('DB', 'USER', fallback='askme_user'),
+        'PASSWORD': config.get('DB', 'PASSWORD', fallback='askme_pass'),
+        'HOST': config.get('DB', 'HOST', fallback='localhost'),
+        'PORT': config.getint('DB', 'PORT', fallback=5433),
+        'OPTIONS': {
+            'client_encoding': 'UTF8',
+            'options': '-c client_encoding=utf8'
+        }
+    }
+}
+
+
+

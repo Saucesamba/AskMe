@@ -6,24 +6,115 @@ from django.views import View
 import math
 import json
 from django.http import HttpResponseRedirect
-
+from django.core.cache import cache
+from django.utils import timezone
+from datetime import timedelta
+from django.db import models
 
 from questions.pagination import paginate
 from questions.models import Tag, Question, QuestionLike, QuestionAnswer, AnswerLike
+from users.models import UserProfile
+from users.burst import BurstMixin
 from django.shortcuts import get_object_or_404
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from .forms import QuestionForm, AnswerForm
 from django.views.decorators.csrf import csrf_exempt
- 
+
+class DjangoCacheView(TemplateView):
+    http_method_names = ['get', 'post']
+    template_name = 'core/cache_form.html'
+
+    def get_context_data(self, key, **kwargs):
+        context = super(DjangoCacheView, self).get_context_data(**kwargs)
+        value = cache.get(key)
+        context['current_value'] = value
+        return context
+
+    def post(self, request, key, *args, **kwargs):
+        value = request.POST.get('value', None)
+        if not value:
+            return JsonResponse({
+                'success': False,
+                'error': 'Обязательно нужно передать значение'
+            }, status=400)
+
+        cache.set(key, value)
+        return redirect('cache', key=key)
+
+from django.db.models import Count, Sum, Q, F
+from django.db.models.functions import Coalesce
+from django.db import models as dj_models
+
+
+def get_popular_tags():
+    """Получить 10 самых популярных тегов за последние 3 месяца"""
+    cache_key = 'popular_tags'
+    cached_tags = cache.get(cache_key)
+
+    if cached_tags is not None:
+        return cached_tags
+
+    three_months_ago = timezone.now() - timedelta(days=90)
+
+    # Считаем количество вопросов, привязанных к каждому тегу за последние 3 месяца
+    popular_tags_qs = Tag.objects.annotate(
+        question_count=Count('question', filter=Q(question__created_at__gte=three_months_ago))
+    ).order_by('-question_count')[:10]
+
+    popular_tags = list(popular_tags_qs)
+
+    # Кэшируем на 1 час
+    cache.set(cache_key, popular_tags, 3600)
+
+    return popular_tags
+
+
+def get_best_users():
+    """Получить 10 лучших пользователей за последнюю неделю"""
+    cache_key = 'best_users'
+    cached_users = cache.get(cache_key)
+
+    if cached_users is not None:
+        return cached_users
+
+    one_week_ago = timezone.now() - timedelta(days=7)
+
+    # Сумма лайков по вопросам и ответам за последнюю неделю
+    users_qs = UserProfile.objects.annotate(
+        q_likes=Coalesce(Sum('question__like_count', filter=Q(question__created_at__gte=one_week_ago)), 0),
+        a_likes=Coalesce(Sum('questionanswer__like_count', filter=Q(questionanswer__created_at__gte=one_week_ago)), 0),
+    ).annotate(
+        total_likes=F('q_likes') + F('a_likes')
+    ).order_by('-total_likes')[:10]
+
+    best_users = list(users_qs)
+
+    cache.set(cache_key, best_users, 1800)
+
+    return best_users
+
+# Базовый класс для всех представлений с кэшированием
+class CachedTemplateView(TemplateView):
+    """Базовый класс с кэшированием правой колонки"""
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        
+        # Добавляем кэшированные данные в контекст
+        context['popular_tags'] = get_popular_tags()
+        context['best_users'] = get_best_users()
+        
+        return context
+
 @method_decorator(login_required, name = 'dispatch')
-class MainPageView(TemplateView):
+class MainPageView(CachedTemplateView):
     template_name = 'questions/index.html'
     QUESTIONS_PER_PAGE = 7
 
     def get_context_data(self, **kwargs):
-
-        context = super(MainPageView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
+        
         page = int(self.request.GET.get('page', 1))
 
         context['meta'] = {
@@ -35,19 +126,18 @@ class MainPageView(TemplateView):
 
         context.update(ctx)
         context['questions'] = q
-        context['tags'] = Tag.objects.all()[:12]
         return context
 
     def dispatch(self, request, *args, **kwargs):
         return super(MainPageView, self).dispatch(request, *args, **kwargs)
 
 @method_decorator(login_required, name = 'dispatch')
-class HotQuestionsView(TemplateView):
+class HotQuestionsView(CachedTemplateView):
     template_name = 'questions/index.html'
     QUESTIONS_PER_PAGE = 5
 
     def get_context_data(self, **kwargs):
-        context = super(HotQuestionsView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         page = int(self.request.GET.get('page', 1))
 
         context['meta'] = {
@@ -59,24 +149,21 @@ class HotQuestionsView(TemplateView):
 
         context.update(ctx)
         context['questions'] = q
-        context['tags'] = Tag.objects.all()[:12]
-
         return context
     
     def dispatch(self, request, *args, **kwargs):
         return super(HotQuestionsView, self).dispatch(request, *args, **kwargs)
     
 @method_decorator(login_required, name = 'dispatch')   
-class OneQuestionView(TemplateView):
+class OneQuestionView(CachedTemplateView):
     template_name = 'questions/question.html'
 
     def get_context_data(self, **kwargs):
-        context = super(OneQuestionView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         q = get_object_or_404(Question, pk=self.kwargs.get("pk"))
         answers = q.answers.all()
         context["answers"] = answers[:15]
         context["question"] = q
-        context['tags'] = Tag.objects.all()[:12]
         context['answer_form'] = AnswerForm()
         return context
     
@@ -90,6 +177,7 @@ class OneQuestionView(TemplateView):
             answer.author = request.user
             answer.like_count = 0 
             answer.save()
+            cache.delete('best_users')
 
             redirect_url = reverse('question_details', kwargs={'pk': q.pk})
             return HttpResponseRedirect(f"{redirect_url}#answer-{answer.id}")
@@ -101,12 +189,12 @@ class OneQuestionView(TemplateView):
         return super(OneQuestionView, self).dispatch(request, *args, **kwargs)
     
 @method_decorator(login_required, name = 'dispatch')
-class TagFilteredQuestionsView(TemplateView):
+class TagFilteredQuestionsView(CachedTemplateView):
     template_name = 'questions/index.html'
     QUESTIONS_PER_PAGE = 3
 
     def get_context_data(self, **kwargs):
-        context = super(TagFilteredQuestionsView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         page = int(self.request.GET.get('page', 1))
 
 
@@ -122,7 +210,6 @@ class TagFilteredQuestionsView(TemplateView):
 
         context.update(ctx)
         context['questions'] = q
-        context['tags'] = Tag.objects.all()[:12]
 
         return context
     
@@ -130,14 +217,19 @@ class TagFilteredQuestionsView(TemplateView):
         return super(TagFilteredQuestionsView, self).dispatch(request, *args, **kwargs)
 
 @method_decorator(login_required, name = 'dispatch')    
-class NewQuestionView(TemplateView):
+class NewQuestionView(BurstMixin, CachedTemplateView):
     http_method_names = ['get','post']
     template_name = "questions/ask.html"
 
+    # Лимит 1 вопрос в минуту 
+    burst_key = 'new_question'
+    limits = {'minute': 1}
+    burst_error_code = 400
+    burst_error_msg = 'Вы слишком часто публикуете вопросы. Попробуйте через минуту.'
+
     def get_context_data(self, **kwargs):
-        context = super(NewQuestionView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         context['form'] = QuestionForm()
-        context['tags'] = Tag.objects.all()[:12]
         return context
     
     def post(self, request, *args, **kwargs):
@@ -155,9 +247,18 @@ class NewQuestionView(TemplateView):
                 tag, _ = Tag.objects.get_or_create(title=tag_name.lower())
                 tags.append(tag)
             question.tags.set(tags)
+
+            #инвалидация кеша когда создаем новый вопрос
+            cache.delete('popular_tags')
+            cache.delete('best_users')
             return redirect('question_details', pk=question.pk)
         
         return render(request, self.template_name, {'form': form})
+
+    def get_burst_error_response(self, request):
+        # Возвращаем рендер формы с сообщением об ошибке и кодом 400
+        form = QuestionForm()
+        return render(request, self.template_name, {'form': form, 'burst_error': self.burst_error_msg}, status=self.burst_error_code)
 
     def dispatch(self, request, *args, **kwargs):
         return super(NewQuestionView,self).dispatch(request, *args, **kwargs)

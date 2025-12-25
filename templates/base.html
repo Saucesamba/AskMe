@@ -62,28 +62,47 @@
         <div class = "side-info">
             <div class = "popular-tags">
                 <h2>Popular Tags</h2>
+
                 <div class="tags-wrapper">
-
-                    {%for t in tags%}
-                        <a href = "{%url 'tag' t%}">{{t}}</a>
-                    {% endfor %}
-
+                    {% if popular_tags %}
+                        {% for tag in popular_tags %}
+                            <a href = "{% url 'tag' tag=tag.title %}">{{ tag.title }}</a>
+                        {% empty %}
+                            <span>No popular tags yet</span>
+                        {% endfor %}
+                    {% else %}
+                        {% for t in tags %}
+                            <a href = "{% url 'tag' tag=t.title %}">{{ t.title }}</a>
+                        {% empty %}
+                            <span>No tags available</span>
+                        {% endfor %}
+                    {% endif %}
                 </div>
+
             </div>
             <div class = "best-members">
                 <h2>Best Members</h2>
                 <ul class = "best-members-links">
-                    <li> 
-                        <a href = "#">Mr. Freeman</a>
-                    </li>
-
-                    <li> 
-                        <a href = "#">Dr. House</a>
-                    </li>
-
-                    <li> 
-                        <a href = "#">Bender</a>
-                    </li>
+                    {% if best_users %}
+                        {% for user in best_users %}
+                            <li> 
+                                <a href = "{% url 'index' %}">{{ user.username }}</a>
+                            </li>
+                        {% empty %}
+                            <li>No best members yet</li>
+                        {% endfor %}
+                    {% else %}
+                        <!-- Fallback если кэш не загрузился -->
+                        <li> 
+                            <a href = "#">Mr. Freeman</a>
+                        </li>
+                        <li> 
+                            <a href = "#">Dr. House</a>
+                        </li>
+                        <li> 
+                            <a href = "#">Bender</a>
+                        </li>
+                    {% endif %}
                 </ul>
             </div>
         </div>

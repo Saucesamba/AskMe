@@ -89,11 +89,18 @@ WSGI_APPLICATION = 'AskMe.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': config.get('DB', 'NAME', fallback='askme_db'),
+        'USER': config.get('DB', 'USER', fallback='askme_user'),
+        'PASSWORD': config.get('DB', 'PASSWORD', fallback='askme_pass'),
+        'HOST': config.get('DB', 'HOST', fallback='localhost'),
+        'PORT': config.getint('DB', 'PORT', fallback=5433),
+        'OPTIONS': {
+            'client_encoding': 'UTF8',
+            'options': '-c client_encoding=utf8'
+        }
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
@@ -163,20 +170,7 @@ CACHES = {
     }
 }
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': config.get('DB', 'NAME', fallback='askme_db'),
-        'USER': config.get('DB', 'USER', fallback='askme_user'),
-        'PASSWORD': config.get('DB', 'PASSWORD', fallback='askme_pass'),
-        'HOST': config.get('DB', 'HOST', fallback='localhost'),
-        'PORT': config.getint('DB', 'PORT', fallback=5433),
-        'OPTIONS': {
-            'client_encoding': 'UTF8',
-            'options': '-c client_encoding=utf8'
-        }
-    }
-}
+
 
 
 

@@ -2,5 +2,5 @@
 .idea
 .venv
 *.sqlite3
-conf/
+
 __pycache__/
